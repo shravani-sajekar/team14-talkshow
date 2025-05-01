@@ -1,7 +1,6 @@
 import streamlit as st
 import os
 import subprocess
-import time
 import logging
 import traceback
 import tempfile
@@ -25,7 +24,7 @@ def process_audio(audio_file_path):
         logger.debug(f"Audio file path: {audio_file_path}")
         logger.debug(f"Audio file size: {os.path.getsize(audio_file_path)} bytes")
 
-        # Correctly build paths relative to this script's location
+        # Build paths relative to this script's location
         base_dir = os.path.dirname(__file__)
         demo_script_path = os.path.join(base_dir, 'scripts', 'demo.py')
         config_file_path = os.path.join(base_dir, 'config', 'body_pixel.json')
