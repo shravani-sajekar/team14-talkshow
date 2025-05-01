@@ -142,7 +142,7 @@ def infer(g_body, g_face, smplx_model, rendertool, config, args):
     am = Wav2Vec2Processor.from_pretrained("vitouphy/wav2vec2-xls-r-300m-phoneme")
     am_sr = 16000
     num_sample = args.num_sample
-    cur_wav_file = '/Users/shravanisajekar/Desktop/CCN/TALKSHOW/demo_audio/1st-page.wav'
+    cur_wav_file = os.path.join(os.path.dirname(__file__), 'demo_audio', '1st-page.wav')
     id = args.id
     face = args.only_face
     stand = args.stand
@@ -222,7 +222,7 @@ def main():
     parser = parse_args()
     args = parser.parse_args()
 
-    config_file_path = '/Users/shravanisajekar/Desktop/CCN/TALKSHOW/config/body_pixel.json'
+    config_file_path = os.path.join(os.path.dirname(__file__), 'config', 'body_pixel.json')
     config = load_JsonConfig(config_file_path)
 
     face_model_name = args.face_model_name
@@ -241,7 +241,7 @@ def main():
 
     print('Initializing SMPLX model...')
     smplx_model = smplx.create(
-        model_path="/Users/shravanisajekar/Desktop/CCN/TALKSHOW/visualise/smplx/",
+        model_path=os.path.join(os.path.dirname(__file__), 'visualise', 'smplx'),
         model_type='smplx',
         gender='neutral',
         dtype=torch.float32,
