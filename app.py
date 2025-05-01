@@ -6,6 +6,7 @@ import logging
 import traceback
 import tempfile
 import shutil
+
 def process_audio(audio_file_path):
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(levelname)s - %(message)s')
@@ -25,10 +26,18 @@ def process_audio(audio_file_path):
         logger.debug(f"Audio file path: {os.path.abspath(audio_file_path)}")
         logger.debug(f"Audio file size: {os.path.getsize(audio_file_path)} bytes")
 
+        demo_script_path = os.path.join(os.path.dirname(__file__), 'scripts', 'demo.py')
+        config_file_path = os.path.join(os.path.dirname(__file__), 'config', 'body_pixel.json')
+
+        # Dynamic output filename based on the uploaded audio file name
+        audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
+        output_path = os.path.join(output_dir, f"{audio_filename}.mp4")
+        logger.info(f"Expected output path: {output_path}")
+
         cmd = [
             "python3",
-            os.path.abspath("/Users/shravanisajekar/Desktop/CCN/TALKSHOW/scripts/demo.py"),
-            "--config_file", os.path.abspath("config/body_pixel.json"),
+            os.path.abspath(demo_script_path),  # Use the relative path to demo.py
+            "--config_file", os.path.abspath(config_file_path),  # Use relative path to config file
             "--infer",
             "--audio_file", os.path.abspath(audio_file_path),
             "--id", "0",
@@ -48,9 +57,6 @@ def process_audio(audio_file_path):
 
         logger.info(f"Command STDOUT: {result.stdout}")
         logger.error(f"Command STDERR: {result.stderr}")
-
-        output_path = os.path.join(output_dir, "shravanisajekar/1st-page.mp4")
-        logger.info(f"Expected output path: {output_path}")
 
         if os.path.exists(output_path):
             logger.info(f"Output video found: {output_path}")
@@ -85,4 +91,3 @@ if uploaded_file is not None:
     elif video_path:
         st.success("Motion video generated successfully!")
         st.video(video_path)
-
