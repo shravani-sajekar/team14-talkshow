@@ -5,7 +5,6 @@ import time
 import logging
 import traceback
 import tempfile
-import shutil
 
 def process_audio(audio_file_path):
     logging.basicConfig(level=logging.DEBUG,
@@ -23,23 +22,25 @@ def process_audio(audio_file_path):
         os.makedirs(output_dir, exist_ok=True)
 
         logger.debug(f"Current working directory: {os.getcwd()}")
-        logger.debug(f"Audio file path: {os.path.abspath(audio_file_path)}")
+        logger.debug(f"Audio file path: {audio_file_path}")
         logger.debug(f"Audio file size: {os.path.getsize(audio_file_path)} bytes")
 
-        demo_script_path = os.path.join(os.path.dirname(__file__), 'scripts', 'demo.py')
-        config_file_path = os.path.join(os.path.dirname(__file__), 'config', 'body_pixel.json')
+        # Correctly build paths relative to this script's location
+        base_dir = os.path.dirname(__file__)
+        demo_script_path = os.path.join(base_dir, 'scripts', 'demo.py')
+        config_file_path = os.path.join(base_dir, 'config', 'body_pixel.json')
 
-        # Dynamic output filename based on the uploaded audio file name
+        # Generate output filename based on input audio name
         audio_filename = os.path.splitext(os.path.basename(audio_file_path))[0]
         output_path = os.path.join(output_dir, f"{audio_filename}.mp4")
         logger.info(f"Expected output path: {output_path}")
 
         cmd = [
             "python3",
-            os.path.abspath(demo_script_path),  # Use the relative path to demo.py
-            "--config_file", os.path.abspath(config_file_path),  # Use relative path to config file
+            demo_script_path,
+            "--config_file", config_file_path,
             "--infer",
-            "--audio_file", os.path.abspath(audio_file_path),
+            "--audio_file", audio_file_path,
             "--id", "0",
             "--whole_body"
         ]
@@ -70,7 +71,6 @@ def process_audio(audio_file_path):
         logger.error(f"Unexpected error: {str(e)}")
         logger.error(traceback.format_exc())
         return None, f"Unexpected error: {str(e)}"
-
 
 # Streamlit UI
 st.title("TalkSHOW: Speech-to-Motion Translation System")
