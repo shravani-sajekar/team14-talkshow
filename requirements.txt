@@ -1,5 +1,5 @@
 numpy>=1.22.0
-transformers>=4.37.0
+transformers==4.37.2
 matplotlib<4
 textgrid~=1.5
 smplx~=0.1.28
